@@ -13,39 +13,12 @@ exclude:
 #    before:
 #        - lessc --clean-css website/less/main.less website/css/all.min.css
 
+# For some reason, baseUrl seems ignored... ???
 baseUrl: http://moufmouf.github.io/service-providers-best-practices
+
+myBaseUrl: http://moufmouf.github.io/service-providers-best-practices
 
 title: Universal service-providers
 site:
     title: Universal service-providers
 
-menu:
-    items:
-        php:
-            text: PHP
-        php-dev-env:
-            text: Development environment
-            relativeUrl: php/development_environment.html
-        php-defensive-programming:
-            text: Defensive programming
-            relativeUrl: php/defensive_programming.html
-        php-exceptions:
-            text: Error handling
-            relativeUrl: php/error_handling.html
-        php-organize:
-            text: Organize your code
-            relativeUrl: php/organize_your_code.html
-        php-beautiful-classes-and-methods:
-            text: Design beautiful classes and methods
-            relativeUrl: php/design_beautiful_classes_and_methods.html
-        php-coding-style:
-            text: Coding style
-            relativeUrl: php/coding_style.html
-        php-cli:
-            text: Scripts and command line
-            relativeUrl: php/cli.html
-        php-librairies:
-            text: Librairies
-        php-librairies-doctrine:
-            text: Doctrine
-            relativeUrl: php/librairies/doctrine.html

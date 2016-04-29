@@ -6,14 +6,14 @@
 
         <title>{{ title }}</title>
 
-        <link rel="stylesheet" href="{{ baseUrl }}/css/bootstrap.min.css">
+        <link rel="stylesheet" href="{{ myBaseUrl }}/css/bootstrap.min.css">
         <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
-        <link rel="stylesheet" href="{{ baseUrl }}/css/main.css">
-        <link rel='stylesheet' id='hljstheme-css'  href='{{ baseUrl }}/components/highlightjs/styles/darkula.css' type='text/css' media='all' />
+        <link rel="stylesheet" href="{{ myBaseUrl }}/css/main.css">
+        <link rel='stylesheet' id='hljstheme-css'  href='{{ myBaseUrl }}/components/highlightjs/styles/darkula.css' type='text/css' media='all' />
 
         <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
-        <script type='text/javascript' src='{{ baseUrl }}/components/highlightjs/highlight.pack.min.js'></script>
+        <script type='text/javascript' src='{{ myBaseUrl }}/components/highlightjs/highlight.pack.min.js'></script>
 
         <script>
             $(function() {
@@ -56,10 +56,10 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ baseUrl }}/">Home</a></li>
-                    <li><a href="{{ baseUrl }}/users.html">For users</a></li>
-                    <li><a href="{{ baseUrl }}/package_developers.html">For package developers</a></li>
-                    <li><a href="{{ baseUrl }}/framework_developers.html">For framework developers</a></li>
+                    <li><a href="{{ myBaseUrl }}/">Home</a></li>
+                    <li><a href="{{ myBaseUrl }}/users.html">For users</a></li>
+                    <li><a href="{{ myBaseUrl }}/package_developers.html">For package developers</a></li>
+                    <li><a href="{{ myBaseUrl }}/framework_developers.html">For framework developers</a></li>
                     <!--<li class="dropdown">
                       <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
                       <ul class="dropdown-menu">
@@ -104,7 +104,6 @@
             {%  if jumbotron.subtitle %}<p class="lead">{{ jumbotron.subtitle }}</p>{% endif %}
         </div>
         {% endif %}
-
 
         {{ content|raw }}
     </div>
