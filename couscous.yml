@@ -13,7 +13,7 @@ exclude:
 #    before:
 #        - lessc --clean-css website/less/main.less website/css/all.min.css
 
-#baseUrl: http://bestpractices.thecodingmachine.com
+baseUrl: http://moufmouf.github.io/service-providers-best-practices
 
 title: Universal service-providers
 site:
