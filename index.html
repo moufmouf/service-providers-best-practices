@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Universal service-providers</title>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel='stylesheet' id='hljstheme-css'  href='/components/highlightjs/styles/darkula.css' type='text/css' media='all' />
+
+        <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src='/components/highlightjs/highlight.pack.min.js'></script>
+
+        <script>
+            $(function() {
+                // Little tweak for <h1>
+                $("main > h1").wrap('<div class="page-header" />');
+            });
+        </script>
+
+        <script type="text/javascript">
+            (function($, window) {
+                var init_fn_flag = false;
+                var init_fn = (function() {
+                    if (init_fn_flag)
+                        return;
+                    init_fn_flag = true;
+                    hljs.configure({"tabReplace":"    "});
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                });
+                $(document).ready(init_fn);
+                $(window).on("load", init_fn);
+            })(jQuery, window);
+        </script>
+
+    </head>
+    <body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Universal service-providers</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/users.html">For users</a></li>
+                    <li><a href="/package_developers.html">For package developers</a></li>
+                    <li><a href="/framework_developers.html">For framework developers</a></li>
+                    <!--<li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                      </ul>
+                    </li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">About</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+
+    </nav>
+
+    <div class="container">
+                <script>
+            $(function() {
+                var jumboHeight = $('.jumbotron').outerHeight();
+                function parallax(){
+                    var scrolled = $(window).scrollTop();
+                    $('.bg').css('height', (jumboHeight-scrolled) + 'px');
+                }
+
+                $(window).scroll(function(e){
+                    parallax();
+                });
+                parallax();
+
+            });
+        </script>
+        <div class="bg" style="background-image: url('../images/elephant.jpeg')"></div>        <div class="jumbotron" >
+            <h1>Deploy your services in any PHP framework</h1>
+            <p class="lead">Finally, frameworks are playing together!</p>        </div>
+        
+
+        <p><strong>Universal modules</strong> are PHP packages built to be framework agnostic. They integrate and run easily with any package.</p>
+<p>Every modern PHP framework comes with a <em>container</em>. The container provides the framework with configured <em>instances</em> of services.
+If you are a package developer and you need to integrate with a particular framework, you usually need to write a <em>meta-package</em> that explains to the framework how to configure its container. If you want to support 5 frameworks, you have to write 5 modules. On the opposite side, as a user, if the package author did not write a meta-package for your particular framework, it gets harder to use his package.</p>
+<p>That's where <strong>universal modules</strong> come into play. Universal modules have the ability to put <em>services</em> into any framework's container.</p>
+<h2 id="how-is-this-different-from-container-interopservice-provider">How is this different from container-interop/service-provider?</h2>
+<p><strong>Universal modules</strong> are built on top of <a href="http://github.com/container-interop/service-provider">container-interop's service providers</a>.</p>
+<p>The <code>container-interop/service-provider</code> project contains the base <code>ServiceProvider</code> interface allowing packages to provide services to all compatible frameworks. The interface is meant to be a standard that can be adopted easily. By design, the <code>container-interop/service-provider</code> project does not enforce anything regarding naming, performances, etc...</p>
+<p>This <code>universal modules</code> norm offers an additional set of rules that are more opinionated and extend the standard.</p>
+<p>For instance, universal modules have:</p>
+<ul>
+<li>A strict naming policy for services</li>
+<li>Puli integration: they are automatically detected by your framework</li>
+</ul>
+<p>This website also provides a set of advices for universal module writers allowing them to:</p>
+<ul>
+<li>write modules that are truly interoperable</li>
+<li>write service providers that have the best possible performance</li>
+</ul>
+    </div>
+
+
+    </body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Universal service-providers</title>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel='stylesheet' id='hljstheme-css'  href='/components/highlightjs/styles/darkula.css' type='text/css' media='all' />
+
+        <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src='/components/highlightjs/highlight.pack.min.js'></script>
+
+        <script>
+            $(function() {
+                // Little tweak for <h1>
+                $("main > h1").wrap('<div class="page-header" />');
+            });
+        </script>
+
+        <script type="text/javascript">
+            (function($, window) {
+                var init_fn_flag = false;
+                var init_fn = (function() {
+                    if (init_fn_flag)
+                        return;
+                    init_fn_flag = true;
+                    hljs.configure({"tabReplace":"    "});
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                });
+                $(document).ready(init_fn);
+                $(window).on("load", init_fn);
+            })(jQuery, window);
+        </script>
+
+    </head>
+    <body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Universal service-providers</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/users.html">For users</a></li>
+                    <li><a href="/package_developers.html">For package developers</a></li>
+                    <li><a href="/framework_developers.html">For framework developers</a></li>
+                    <!--<li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                      </ul>
+                    </li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">About</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+
+    </nav>
+
+    <div class="container">
+                <script>
+            $(function() {
+                var jumboHeight = $('.jumbotron').outerHeight();
+                function parallax(){
+                    var scrolled = $(window).scrollTop();
+                    $('.bg').css('height', (jumboHeight-scrolled) + 'px');
+                }
+
+                $(window).scroll(function(e){
+                    parallax();
+                });
+                parallax();
+
+            });
+        </script>
+        <div class="bg" style="background-image: url('../images/together.jpeg')"></div>        <div class="jumbotron" style="color: #333">
+            <h1>For end-users</h1>
+            <p class="lead">Everything you need to integrate a universal module in your project</p>        </div>
+        
+
+        <h1 id="for-users">For users</h1>
+<p>What you need to integrate a universal-module in your project (i.e. a compatible container/framework)</p>
+<p>=&gt; need to use a compatible package and a compatible framework/container</p>
+<ul>
+<li>explain Puli integration, how to disable a package...</li>
+</ul>
+<h2 id="compatible-frameworks">Compatible frameworks</h2>
+<div class="row">
+  <div class="col-sm-6 col-md-4">
+    <div class="thumbnail">
+      <img src="images/symfony_white_03.png" alt="Symfony"><div class="caption">
+        <h3 id="symfony-integration">Symfony integration</h3>
+        <p>Lorem ipsum</p>
+        <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-4">
+      <div class="thumbnail">
+        <img src="images/sign-laravel.png" alt="Laravel"><div class="caption">
+          <h3 id="laravel-integration">Laravel integration</h3>
+          <p>Lorem ipsum</p>
+          <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
+        </div>
+      </div>
+  </div>
+</div>
+<p>=&gt; for each framework, explain how to get started.</p>
+<h2 id="compatible-containers">Compatible containers</h2>
+<p>Maybe you are not into full-stack frameworks? Maybe you are just looking for a nice <strong>stand-alone container</strong> that is compatible with <strong>universal modules</strong>?</p>
+<p>Look no further, you are in the right section!</p>
+<p>Below is a list of compatible containers that can be used out of the box to load service providers provided by your universal modules.</p>
+<ul>
+<li>Simplex</li>
+<li>Yaco</li>
+</ul>
+    </div>
+
+
+    </body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Universal service-providers</title>
+
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <!--<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
+        <link rel="stylesheet" href="/css/main.css">
+        <link rel='stylesheet' id='hljstheme-css'  href='/components/highlightjs/styles/darkula.css' type='text/css' media='all' />
+
+        <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+        <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script type='text/javascript' src='/components/highlightjs/highlight.pack.min.js'></script>
+
+        <script>
+            $(function() {
+                // Little tweak for <h1>
+                $("main > h1").wrap('<div class="page-header" />');
+            });
+        </script>
+
+        <script type="text/javascript">
+            (function($, window) {
+                var init_fn_flag = false;
+                var init_fn = (function() {
+                    if (init_fn_flag)
+                        return;
+                    init_fn_flag = true;
+                    hljs.configure({"tabReplace":"    "});
+                    $('pre code').each(function(i, block) {
+                        hljs.highlightBlock(block);
+                    });
+                });
+                $(document).ready(init_fn);
+                $(window).on("load", init_fn);
+            })(jQuery, window);
+        </script>
+
+    </head>
+    <body>
+
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Universal service-providers</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/users.html">For users</a></li>
+                    <li><a href="/package_developers.html">For package developers</a></li>
+                    <li><a href="/framework_developers.html">For framework developers</a></li>
+                    <!--<li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="#">Action</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="#">One more separated link</a></li>
+                      </ul>
+                    </li>-->
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#">About</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+
+    </nav>
+
+    <div class="container">
+                <script>
+            $(function() {
+                var jumboHeight = $('.jumbotron').outerHeight();
+                function parallax(){
+                    var scrolled = $(window).scrollTop();
+                    $('.bg').css('height', (jumboHeight-scrolled) + 'px');
+                }
+
+                $(window).scroll(function(e){
+                    parallax();
+                });
+                parallax();
+
+            });
+        </script>
+        <div class="bg" style="background-image: url('../images/elephant2.jpeg')"></div>        <div class="jumbotron" >
+            <h1>For package developers</h1>
+            <p class="lead">Master universal module development!</p>        </div>
+        
+
+        <p>So you have developed a package, and you plan on making it available to many frameworks out there. Welcome!</p>
+<h2 id="universal-modules-are-composer-packages">Universal modules are Composer packages</h2>
+<p>This might be obvious, but let's say it anyway. Universal modules MUST be Composer packages.</p>
+<p>The <code>composer.json</code> file of your package MUST require <code>container-interop/service-provider</code>:</p>
+<pre><code class="language-json">{
+  "require": {
+    "container-interop/service-provider": "^1.0"
+  }
+}</code></pre>
+<h2 id="separate-package-or-bundled-package">Separate package or bundled package?</h2>
+<p>The first question you will have to answer is: <em>do I want the universal module to be part of my main package or is it an additional package?</em></p>
+<p>We are ok with both solutions. If you provide the <em>universal module</em> as an extra package next to your main package, please name it with a <code>-universal-module</code> suffix.
+For instance, if your module is named <code>foo/bar</code>, the <em>universal module</em> should be <code>foo/bar-universal-module</code>.</p>
+<h2 id="implementing-the-interface">Implementing the interface</h2>
+<p>A universal module contains at least one service provider.</p>
+<p>This service provider MUST implement the <a href="https://github.com/container-interop/service-provider/blob/master/src/ServiceProvider.php"><code>Interop\Container\ServiceProvider</code></a> interface.</p>
+<h2 id="constructor-parameters">Constructor parameters</h2>
+<p>The service provider MUST NOT have a constructor with compulsory parameters. It is ok if the service provider has a constructor with some optional parameters.</p>
+<div class="alert alert-info">
+The service provider should be usable <em>out of the box</em>, without having to pass arguments to the container.
+It must not need any kind of configuration to be useful (except configuration provided directly in the container). It is important to remember that containers are expected to
+automatically detect your service provider (using Puli) and create an instance of your service provider (passing no parameter).
+</div>
+<p>Constructor parameters are ok if they are altering the behaviour of a service provider (for instance by modifying the default name of the provided services).</p>
+<h2 id="fetching-configuration">Fetching configuration</h2>
+<p>Configuration MUST be fetched from the container. Each framework stores configuration in a different place.</p>
+<ul>
+<li>Symfony stores configuration in <code>app/config/config.yml</code>.</li>
+<li>Laravel stores configuration in <code>config/app.php</code>.</li>
+<li>Other frameworks will store configuration somewhere else...</li>
+</ul>
+<p>As far as you are concerned, this is not an issue. As long as you are using a compatible framework, <strong>configuration can be accessed from the container</strong>.</p>
+<p>So if your service provider needs a <code>LOGFILE</code> configuration parameter, you can simply use <code>$container-&gt;get('LOGFILE')</code>.</p>
+<p>Of course, you will need to let the developer know you are expecting such a parameter to exist. More on this in the documentation chapter below.</p>
+<div class="alert alert-danger">What you should NOT do:</div>
+<pre><code class="language-php">class DbConnectionProvider implements ServiceProvider {
+
+    private $dbHost;
+    private $dbUser;
+    private $dbPassword;
+
+    /**
+     * Such a constructor is NOT ok. You are forcing the developer to pass parameters in the constructor
+     * arguments, hence defeating the purpose of the dependency-injection container.
+     */
+    public function __construct(string $dbHost, string $dbUser, string $dbPassword)
+    {
+        $this-&gt;dbHost = $dbHost;
+        $this-&gt;dbUser = $dbUser;
+        $this-&gt;dbPassword = $dbPassword;
+    }
+
+    public function getServices()
+    {
+        return [
+            DbConnection::class =&gt; [ self::class, 'createConnection' ]
+        ];
+    }
+
+    public static function createConnection()
+    {
+        return new DbConnection($this-&gt;dbHost, $this-&gt;dbUser, $this-&gt;dbPassword);
+    }
+}</code></pre>
+<div class="alert alert-success">What you should do instead:</div>
+<pre><code class="language-php">class DbConnectionProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            DbConnection::class =&gt; [ self::class, 'createConnection' ]
+        ];
+    }
+
+    public static function createConnection(ContainerInterface $container)
+    {
+        // This is ok: configuration is fetched from the container.
+        return new DbConnection(
+            $container-&gt;get('my.package.dbhost'),
+            $container-&gt;get('my.package.dbuser'), 
+            $container-&gt;get('my.package.dbpassword')
+        );
+    }
+}</code></pre>
+<p>TODO</p>
+<p>explain why (Puli must be able to create service provider automatically + a service provider must be usable out of the box without requiring any parameter in the constructor)</p>
+<h1 id="for-package-developers">For package developers</h1>
+<ul>
+<li>explain how to document a package</li>
+<li>naming convention</li>
+<li>no compulsory parameters in the constructor</li>
+<li>fetching dependencies</li>
+<li>explain Puli integration, how to bind a package</li>
+<li>performance best practices</li>
+</ul>
+    </div>
+
+
+    </body>
+</html>
