@@ -1,17 +1,17 @@
 language: php
 php:
- - 7.0
+- 7.0
 node_js:
- - 4
+- 4
 env:
   global:
-   - GIT_NAME: "'Couscous auto deploy'"
-   - GIT_EMAIL: d.negrier@thecodingmachine.com
-   - GH_REF: github.com/moufmouf/service-providers-best-practices
-   - secure: DqH45XSmGKzMHBgTze+4oErUiwkWeWsclmci+A3yJYXgqJRFKi4UZhE/BhH2JJBF4XwKp4eMl1FREru2r7RoZLvyIl4Ky6XR2qPikMR+Em5KXUYvAXNBeeyO80gmJ1w2k2GdDpDvbsHN9atd75KBvJyAf6g8532JY7tIfFyMjdLmMzwWBHkQD6iTv5srQDUxRVEAZbqKjmfj8zLcsWG/NiMuOL8Y6V4gnbkL8Vd7QCjIk2XZkdIuxtVp6tmF+mzWVODWiytkvTTMoslGDFSCeBAlfSvso1hAZg1T/G6d08rBMD7ZdILrI5iZadJ/HejYOlYcXb5FrDzZGpMV7cjrcwU3X5bJO0acNWZYdFWiBtfKzsrAHvOtaIp7uugr9c0fJi++UUoHh9Ceia3q0xiZQf4oGP3lMVssdvHExJIEYV/u5zAE+/VB9Fv5s4TWRLc5MzwFpt37hf593Vz9ffkXIYB6kjojKFqMOudYQthCc54Gkf/URXa1ecGBxBVYUyFbk2xqgaxrsdE2Ea6UFxqhKZjujHmyNslgwv96/A+AVXRoTDuuEb0/jKS/IRioQY2lJj0CRfj+9i6xsvGmj2flqWgNk85LjUZIvvVUfk915nMMb6fBaOoGTTyRt13Th2h4u4+nhzBNqnj7IpCfvQV1gTRCmiY8/Yfx5BV8AKcPofc=
+  - GIT_NAME: "'Couscous auto deploy'"
+  - GIT_EMAIL: d.negrier@thecodingmachine.com
+  - GH_REF: github.com/moufmouf/service-providers-best-practices
+  - secure: vI1vBwjjbO2bYKCaHP7JkQ/2azVvQVIQeNGGOpfrxv+0fpzjL0C+GOmsSbeJdfbUoZY4lymh124E4oZ1a4oXM3NsjKLeX/RhX7AXRWzOu7lvDCuimr5uzQoizdPptD4xaNb6uJrL7BvCpji2kWEh/F9f4Qv4gUbC7DW4mkMEORyZkT+ctaqqc0VKXA1c568QPLYcszumlHHm1t91dmp97QRGP0PErEVNug3VW7w+Ad/fSyd3LobiDVqs6og0EqqosR3Q/+oXozFx86kuKDv9wla4LAc7Skex5JAKNusyzNlaT8yj/yO9Uc7dCYJAOzPDlF9oUXD34Ay6cRd7g7wrVLRvirKjivNg+ZGTgCURoJnTof57M5AuD2NEs9NAS3zVsN55/XP4KVsR/F/c6u6B2jjxjNRD4+m8Z1hYqPozdtdjnnSl+GxLHVx1U+cjj8YzsyhWvyYMMrQ1Z1tVDTUS4X6EP4mhxcoC7Y0bSOXokfoDcrfSbhnfHm0YzIcTscOXNt5W3SlvSumxpqM3CxOWVB5iSSFlmfU1SvopPhFjONaJgKBK2BEDowS8Eem+him+Un8H5wV944XuLnRC3LWLS4vTg2kaYXjNbC7Zu+cmrLXx1mBYkV4xRcTj4vm8ICHnK17s8GONj+rV5XHAhIDczJUBsPI0ilh9ewq4Na7VaMc=
 before_script:
- - composer install --no-progress
- - npm install -g bower
- - bower install
+- composer install --no-progress
+- npm install -g bower
+- bower install
 script:
- - vendor/bin/couscous travis-auto-deploy --php-version=7.0
+- vendor/bin/couscous travis-auto-deploy --php-version=7.0
