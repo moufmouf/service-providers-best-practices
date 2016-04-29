@@ -13,10 +13,7 @@ exclude:
 #    before:
 #        - lessc --clean-css website/less/main.less website/css/all.min.css
 
-# For some reason, baseUrl seems ignored... ???
 baseUrl: http://moufmouf.github.io/service-providers-best-practices
-
-myBaseUrl: http://moufmouf.github.io/service-providers-best-practices
 
 title: Universal service-providers
 site:
