@@ -4,8 +4,7 @@ jumbotron:
     subtitle: Master universal module development!
     image: elephant2.jpeg
 ---
-
-So you have developed a package, and you plan on making it available to many frameworks out there. Welcome!
+So you have developed a package, and you want to make it available to many frameworks out there. Welcome!
 
 Universal modules are Composer packages
 ---------------------------------------
@@ -127,11 +126,128 @@ class DbConnectionProvider implements ServiceProvider {
 }
 ```
 
+Puli integration
+----------------
 
+Universal modules MUST provide a Puli binding for the service providers they are providing.
+
+This way, users of your *universal module* will just have to require the module in Composer and automatically, your service provider will be detected and your service provider entries will be available in the container.
+
+Not used to Puli? Here is a crash course: 
+
+In `composer.json`, add the `puli/cli` and `puli/composer-plugin` in `require-dev`:
+
+```sh
+composer require --dev puli/cli
+composer require --dev puli/composer-plugin
+```
+
+Then, simply use Puli's `bind` command:
+
+```sh
+vendor/bin/puli bind --class Acme\\Foo\\MyServiceProvider container-interop/service-provider
+```
+
+That's it! Do not forget to commit the new `puli.json` file in your package repository!
+
+Naming convention (classes)
+---------------------------
+
+If your service provider is creating a **service** (a class that is most of the time meant to be instantiated only once), the name of your service should be the fully qualified name of the class.
+
+For instance, a database connection or a logger that logs to a file are services. Most of the time, you only need one database connection, or one log file. Of course, you can create later more instances of the same class using your container, but the service provider will help you get started with a sensible default of one instance.
+
+
+<div class="alert alert-danger">This is NOT ok:</div>
+
+```php
+class MyServiceProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            // The 'myModuleService' is not matching the fully qualified class name of 'MyService'.
+            'myModuleService' => function() {
+                return new MyService();
+            }
+        ];
+    }
+}
+```
+
+<div class="alert alert-success">This is ok:</div>
+
+```php
+class MyServiceProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            MyService::class => function() {
+                return new MyService();
+            }
+        ];
+    }
+}
+```
+
+<div class="alert alert-info">Note: it is important to respect this convention, as a courtesy to users of <em>autowiring</em> containers. Those containers will automatically try to inject in containers instances whose name is the name of the type-hinted class/interface. If you do not follow this naming convention, you are preventing the autowiring capability of these containers to work out of the box.</div>
+
+If your service is providing a default implementation for a well-known interface, you can also create an alias on the fully qualified name of the interface.
+
+<div class="alert alert-danger">This is NOT ok:</div>
+
+class MyLoggerProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            // Let's assume FileLogger implements PSR-3's LoggerInterface
+            // The FileLogger should NOT be connected to the LoggerInterface directly.
+            // The LoggerInterface can be overloaded by another service provider and your FileLogger entry will be lost forever.
+            LoggerInterface::class => function(ContainerInterface $container) {
+                return new FileLogger($this->container->get('LOGFILE'));
+            }
+        ];
+    }
+}
+
+
+<div class="alert alert-success">This is ok:</div>
+
+```php
+class MyLoggerProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            // Let's assume FileLogger implements PSR-3's LoggerInterface
+            FileLogger::class => function(ContainerInterface $container) {
+                return new FileLogger($this->container->get('LOGFILE'));
+            },
+            // Then our logger can claim the default instance by creating an alias on the interface name
+            LoggerInterface::class => new Alias(FileLogger::class)
+        ];
+    }
+}
+```
+
+Note: other service providers may also claim the same interface. The last service provided registered will "win".
+But since the FileLogger is the only one to claim its own class name, the user can later decide to use this specific FileLogger using the `FileLogger::class` entry.
+
+
+Naming convention (parameters)
+------------------------------
+
+TODO parameters naming
+TODO ...
+
+
+Performance best practices
+--------------------------
 
 TODO
 
-explain why (Puli must be able to create service provider automatically + a service provider must be usable out of the box without requiring any parameter in the constructor)
 
 
 
