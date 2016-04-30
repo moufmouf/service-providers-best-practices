@@ -195,7 +195,7 @@ composer require --dev puli/composer-plugin</code></pre>
 <p>Then, simply use Puli's <code>bind</code> command:</p>
 <pre><code class="language-sh">vendor/bin/puli bind --class Acme\\Foo\\MyServiceProvider container-interop/service-provider</code></pre>
 <p>That's it! Do not forget to commit the new <code>puli.json</code> file in your package repository!</p>
-<h2 id="naming-convention-classes">Naming convention (classes)</h2>
+<h2 id="naming-convention-objects">Naming convention (objects)</h2>
 <p>If your service provider is creating a <strong>service</strong> (a class that is most of the time meant to be instantiated only once), the name of your service should be the fully qualified name of the class.</p>
 <p>For instance, a database connection or a logger that logs to a file are services. Most of the time, you only need one database connection, or one log file. Of course, you can create later more instances of the same class using your container, but the service provider will help you get started with a sensible default of one instance.</p>
 <div class="alert alert-danger">This is NOT ok:</div>
@@ -256,9 +256,34 @@ composer require --dev puli/composer-plugin</code></pre>
 }</code></pre>
 <p>Note: other service providers may also claim the same interface. The last service provided registered will &quot;win&quot;.
 But since the FileLogger is the only one to claim its own class name, the user can later decide to use this specific FileLogger using the <code>FileLogger::class</code> entry.</p>
-<h2 id="naming-convention-parameters">Naming convention (parameters)</h2>
-<p>TODO parameters naming
-TODO ...</p>
+<p>Finally, your service provider may create many instances of the same class. This is particularly true if your service provider is providing objects that are not services.</p>
+<p>For instance, a service provider could decide many file loggers (one log file for errors, one for debug). Or another service provider might decide to offer menu items to be put in a menu...</p>
+<div class="alert alert-info">If many provided objects share the same class, the name of the object should be <em>namespaced</em> using the Composer package name, in order to avoid naming collisions.</div>
+<p>So if your package is creating 2 file loggers and none is generic enough to claim the <code>FileLogger::class</code> entry, then a good name for those logger would be:</p>
+<ul>
+<li><code>vendor_name/package_name:errorLogger</code></li>
+<li><code>vendor_name/package_name:debugLogger</code></li>
+</ul>
+<h2 id="naming-convention-configurationparameters">Naming convention (configuration/parameters)</h2>
+<div class="alert alert-info">If your service provider requires parameters, it should fetch those from the container.
+It is a good idea to expect namespaced parameters AND to create an alias from the namespaced parameter to the non namespaced parameter.</div>
+<p>Ok, this is probably a little confusing, so let's take an example.</p>
+<p>If your service provider expects a <code>LOGFILE</code> parameter, and another service provider expects a <code>LOGFILE</code> parameter too, there is no way you can feed 2 different <code>LOGFILE</code> parameters to your 2 service providers.</p>
+<p>Instead, your service provider should rely on a parameter named &quot;[vendor_name].[package_name].LOGFILE&quot;.</p>
+<p>Of course, having to provide a parameter named &quot;my_company.my_package.LOGFILE&quot; if a bit tiresome. So your service provider could add an alias to the more simple &quot;LOGFILE&quot; this way:</p>
+<pre><code class="language-php">class MyLoggerProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            FileLogger::class =&gt; function(ContainerInterface $container) {
+                return new FileLogger($this-&gt;container-&gt;get('my_company.mypackage.LOGFILE'));
+            },
+            'my_company.mypackage.LOGFILE' =&gt; new Alias('LOGFILE')
+        ];
+    }
+}</code></pre>
+<p>So now, the user can simply provide a <code>LOGFILE</code> parameter in its configuration. But if for some reason, the parameter <code>LOGFILE</code> is also used by another service provider and the user wants to feed 2 different values to the 2 service providers, the user can instead provide a <code>my_company.mypackage.LOGFILE</code>. This parameter will override the alias defined in the service provider. Shazam! We have a simple solution, yet flexible in case things get more complicated.</p>
 <h2 id="performance-best-practices">Performance best practices</h2>
 <p>TODO</p>
 <h1 id="for-package-developers">For package developers</h1>
