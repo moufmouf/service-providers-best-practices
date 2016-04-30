@@ -150,7 +150,7 @@ vendor/bin/puli bind --class Acme\\Foo\\MyServiceProvider container-interop/serv
 
 That's it! Do not forget to commit the new `puli.json` file in your package repository!
 
-Naming convention (classes)
+Naming convention (objects)
 ---------------------------
 
 If your service provider is creating a **service** (a class that is most of the time meant to be instantiated only once), the name of your service should be the fully qualified name of the class.
@@ -235,12 +235,49 @@ class MyLoggerProvider implements ServiceProvider {
 Note: other service providers may also claim the same interface. The last service provided registered will "win".
 But since the FileLogger is the only one to claim its own class name, the user can later decide to use this specific FileLogger using the `FileLogger::class` entry.
 
+Finally, your service provider may create many instances of the same class. This is particularly true if your service provider is providing objects that are not services.
 
-Naming convention (parameters)
-------------------------------
+For instance, a service provider could decide many file loggers (one log file for errors, one for debug). Or another service provider might decide to offer menu items to be put in a menu...
 
-TODO parameters naming
-TODO ...
+<div class="alert alert-info">If many provided objects share the same class, the name of the object should be <em>namespaced</em> using the Composer package name, in order to avoid naming collisions.</div>
+
+So if your package is creating 2 file loggers and none is generic enough to claim the `FileLogger::class` entry, then a good name for those logger would be:
+
+- `vendor_name/package_name:errorLogger`
+- `vendor_name/package_name:debugLogger`
+
+
+
+Naming convention (configuration/parameters)
+--------------------------------------------
+
+<div class="alert alert-info">If your service provider requires parameters, it should fetch those from the container.
+It is a good idea to expect namespaced parameters AND to create an alias from the namespaced parameter to the non namespaced parameter.</div>
+
+Ok, this is probably a little confusing, so let's take an example.
+
+If your service provider expects a `LOGFILE` parameter, and another service provider expects a `LOGFILE` parameter too, there is no way you can feed 2 different `LOGFILE` parameters to your 2 service providers.
+
+Instead, your service provider should rely on a parameter named "[vendor_name].[package_name].LOGFILE".
+
+Of course, having to provide a parameter named "my_company.my_package.LOGFILE" if a bit tiresome. So your service provider could add an alias to the more simple "LOGFILE" this way:
+
+```php
+class MyLoggerProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            FileLogger::class => function(ContainerInterface $container) {
+                return new FileLogger($this->container->get('my_company.mypackage.LOGFILE'));
+            },
+            'my_company.mypackage.LOGFILE' => new Alias('LOGFILE')
+        ];
+    }
+}
+```
+
+So now, the user can simply provide a `LOGFILE` parameter in its configuration. But if for some reason, the parameter `LOGFILE` is also used by another service provider and the user wants to feed 2 different values to the 2 service providers, the user can instead provide a `my_company.mypackage.LOGFILE`. This parameter will override the alias defined in the service provider. Shazam! We have a simple solution, yet flexible in case things get more complicated.
 
 
 Performance best practices
