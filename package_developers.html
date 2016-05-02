@@ -284,17 +284,89 @@ It is a good idea to expect namespaced parameters AND to create an alias from th
     }
 }</code></pre>
 <p>So now, the user can simply provide a <code>LOGFILE</code> parameter in its configuration. But if for some reason, the parameter <code>LOGFILE</code> is also used by another service provider and the user wants to feed 2 different values to the 2 service providers, the user can instead provide a <code>my_company.mypackage.LOGFILE</code>. This parameter will override the alias defined in the service provider. Shazam! We have a simple solution, yet flexible in case things get more complicated.</p>
-<h2 id="performance-best-practices">Performance best practices</h2>
-<p>TODO</p>
-<h1 id="for-package-developers">For package developers</h1>
+<h2 id="performance-best-practices-1-using-static-methods">Performance best practices 1 (using static methods)</h2>
+<p>Compiled and cached containers can optimize a lot the instantiation of services. In particular, most of them are capable of completely bypassing the instantiation of the service provider and the call to the <code>getServices</code> method, provided the factory can be called directly.</p>
+<div class="alert alert-info">You SHOULD consider declaring your factories as <em>public static methods</em>.</div>
+<p>This way, optimized containers get a way to offer better performances.</p>
+<div class="alert alert-danger">This is NOT optimized:</div>
+<pre><code class="language-php">class MyServiceProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            // To call the closure, any container must first instantiate the service provider and call the getServices method.
+            MyService::class =&gt; function() {
+                return new MyService();
+            }
+        ];
+    }
+}</code></pre>
+<div class="alert alert-success">This can be optimized by a clever enough container:</div>
+<pre><code class="language-php">class MyServiceProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            MyService::class =&gt; [ self::class, 'createMyService' ]
+        ];
+    }
+
+    public static function createMyService() {
+        return new MyService();
+    }
+}</code></pre>
+<h2 id="performance-best-practices-2-using-common-factories">Performance best practices 2 (using common factories)</h2>
+<p>Container-interop provides a set of tools to ease the writing of service providers. Those tools are presented as callable classes (these classes provide a <code>__invoke</code> method).</p>
+<p>By using these classes (instead of developing factories yourself), you can help compiled and cache containers to improve the performance.</p>
+<p>For instance, if you use the <code>Alias</code> class to create an alias, a compiled container could recognize the <code>Alias</code> class and resolve this alias at runtime.</p>
+<p>So if your service provider is providing aliases, extensible arrays or configuration parameters, you should use the <code>container-interop/common-factories</code> package.</p>
+<pre><code class="language-sh">composer require container-interop/common-factories</code></pre>
+<p>See <a href="#">container-interop/common-factories</a> documentation for more information</p>
+<p>TODO: add link when package is created.</p>
+<h2 id="documenting-a-service-provider">Documenting a service provider</h2>
+<p>It is important to provide a detailed documentation of your service provider to your users.</p>
+<p>Your documentation should explain to the user:</p>
 <ul>
-<li>explain how to document a package</li>
-<li>naming convention</li>
-<li>no compulsory parameters in the constructor</li>
-<li>fetching dependencies</li>
-<li>explain Puli integration, how to bind a package</li>
-<li>performance best practices</li>
+<li>the list of <strong>provided services</strong></li>
+<li>the list of <strong>extended services</strong></li>
+<li>the list of <strong>expected services</strong> (i.e. the list of services/parameters required by your service provider.
+Also, it is a good idea to provide a pointer to universal modules providing those expected services.</li>
 </ul>
+<p>Below is a sample markdown documentation of a service provider:</p>
+<pre><code>## Provided services
+
+This *service provider* provides the following services:
+
+| Service name                | Description                          |
+|-----------------------------|--------------------------------------|
+| `Doctrine\DBAL\Connection`  | A DBAL connection to your database   |
+
+## Extended services
+
+This *service provider* extends the following services.
+
+| Service name                | Description                                           |
+|-----------------------------|-------------------------------------------------------|
+| `twig.extensions`           | Registers the twig extension in the extensions list   |
+
+## Expected values / services
+
+This *service provider* expects the following configuration / services to be available:
+
+| Name                   | Compulsory | Description                                                                                   |
+|------------------------|------------|-----------------------------------------------------------------------------------------------|
+| `dbal.host`            | *no*       | The database host. Defaults to *localhost*                                                    |
+| `dbal.user`            | *no*       | The database user. Defaults to *root*                                                         |
+| `dbal.dbname`          | **yes**    | The database name.                                                                            |
+| `Doctrine\DBAL\Driver` | *no*       | The DBAL driver to use to create the connection. Defaults to DBAL's PDO_MySQL Driver service  |</code></pre>
+<h2 id="adding-a-badge">Adding a badge</h2>
+<p>TODO: create badge, add it. (note: badge can be easily created on shields.io)</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>TODO</p>
+<hr />
+<p>TODO: common names
+=&gt; list of routers
+=&gt; list of cache service (???)</p>
     </div>
 
 
