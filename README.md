@@ -31,12 +31,3 @@ This website also provides a set of advices for universal module writers allowin
 
 - write modules that are truly interoperable
 - write service providers that have the best possible performance
-
-
-
-
-
-
-
-
-
