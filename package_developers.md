@@ -280,23 +280,126 @@ class MyLoggerProvider implements ServiceProvider {
 So now, the user can simply provide a `LOGFILE` parameter in its configuration. But if for some reason, the parameter `LOGFILE` is also used by another service provider and the user wants to feed 2 different values to the 2 service providers, the user can instead provide a `my_company.mypackage.LOGFILE`. This parameter will override the alias defined in the service provider. Shazam! We have a simple solution, yet flexible in case things get more complicated.
 
 
-Performance best practices
---------------------------
+Performance best practices 1 (using static methods)
+---------------------------------------------------
+
+Compiled and cached containers can optimize a lot the instantiation of services. In particular, most of them are capable of completely bypassing the instantiation of the service provider and the call to the `getServices` method, provided the factory can be called directly.
+
+<div class="alert alert-info">You SHOULD consider declaring your factories as <em>public static methods</em>.</div>
+
+This way, optimized containers get a way to offer better performances.
+
+<div class="alert alert-danger">This is NOT optimized:</div>
+
+```php
+class MyServiceProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            // To call the closure, any container must first instantiate the service provider and call the getServices method.
+            MyService::class => function() {
+                return new MyService();
+            }
+        ];
+    }
+}
+```
+
+<div class="alert alert-success">This can be optimized by a clever enough container:</div>
+
+```php
+class MyServiceProvider implements ServiceProvider {
+
+    public function getServices()
+    {
+        return [
+            MyService::class => [ self::class, 'createMyService' ]
+        ];
+    }
+    
+    public static function createMyService() {
+        return new MyService();
+    }
+}
+```
+
+Performance best practices 2 (using common factories)
+-----------------------------------------------------
+
+Container-interop provides a set of tools to ease the writing of service providers. Those tools are presented as callable classes (these classes provide a `__invoke` method).
+
+By using these classes (instead of developing factories yourself), you can help compiled and cache containers to improve the performance.
+
+For instance, if you use the `Alias` class to create an alias, a compiled container could recognize the `Alias` class and resolve this alias at runtime.
+
+So if your service provider is providing aliases, extensible arrays or configuration parameters, you should use the `container-interop/common-factories` package.
+
+```sh
+composer require container-interop/common-factories
+```
+
+See [container-interop/common-factories](#) documentation for more information
+
+TODO: add link when package is created.
+
+
+Documenting a service provider
+------------------------------
+
+It is important to provide a detailed documentation of your service provider to your users.
+
+Your documentation should explain to the user:
+
+- the list of **provided services**
+- the list of **extended services**
+- the list of **expected services** (i.e. the list of services/parameters required by your service provider.
+  Also, it is a good idea to provide a pointer to universal modules providing those expected services.
+
+Below is a sample markdown documentation of a service provider:
+
+```
+## Provided services
+
+This *service provider* provides the following services:
+
+| Service name                | Description                          |
+|-----------------------------|--------------------------------------|
+| `Doctrine\DBAL\Connection`  | A DBAL connection to your database   |
+
+## Extended services
+
+This *service provider* extends the following services.
+
+| Service name                | Description                                           |
+|-----------------------------|-------------------------------------------------------|
+| `twig.extensions`           | Registers the twig extension in the extensions list   |
+
+## Expected values / services
+
+This *service provider* expects the following configuration / services to be available:
+
+| Name                   | Compulsory | Description                                                                                   |
+|------------------------|------------|-----------------------------------------------------------------------------------------------|
+| `dbal.host`            | *no*       | The database host. Defaults to *localhost*                                                    |
+| `dbal.user`            | *no*       | The database user. Defaults to *root*                                                         |
+| `dbal.dbname`          | **yes**    | The database name.                                                                            |
+| `Doctrine\DBAL\Driver` | *no*       | The DBAL driver to use to create the connection. Defaults to DBAL's PDO_MySQL Driver service  |
+```
+
+
+Adding a badge
+--------------
+
+TODO: create badge, add it. (note: badge can be easily created on shields.io)
+
+Dependencies
+------------
 
 TODO
 
+----------------------------
 
-
-
-
-
-For package developers
-=======================
-
-
-- explain how to document a package
-- naming convention
-- no compulsory parameters in the constructor
-- fetching dependencies
-- explain Puli integration, how to bind a package
-- performance best practices
+TODO: common names
+=> list of routers
+=> list of cache service (???)
