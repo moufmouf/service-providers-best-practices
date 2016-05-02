@@ -101,11 +101,36 @@
             <h1>For framework and container developers</h1>
             <p class="lead">Making your project compatible with universal modules!</p>        </div>
         
-        <h1 id="for-framework-developers">For framework developers</h1>
+        <p>So you are a framework developer or a container developer and are looking to add support for univeral modules in your project? Welcome!</p>
+<h2 id="adding-support-for-service-providers">Adding support for service providers</h2>
+<p>Essentially, adding support for universal modules means adding support for <a href="http://github.com/container-interop/service-provider">container-interop's service providers</a>.</p>
+<p>There are essentially 2 strategies here:</p>
 <ul>
-<li>explain Puli integration</li>
-<li>explain performance optimizations</li>
+<li>Add support for service providers in your container yourself,  </li>
+<li>Or rely on a third party container and plug it into your container using the <a href="https://github.com/container-interop/container-interop/blob/master/docs/delegate-lookup.html">delegate lookup feature</a>.
+<a href="https://github.com/thecodingmachine/yaco">Yaco</a> can be a good starting point to manage the entries provided by the service providers. It is a compiled container and yet is minimalistic.</li>
 </ul>
+<h2 id="the-container-contains-the-configuration">The container contains the configuration</h2>
+<p>Configuration MUST be available from the container.</p>
+<p>Each framework stores configuration in a different place.</p>
+<ul>
+<li>Symfony stores configuration in <code>app/config/config.yml</code>.</li>
+<li>Laravel stores configuration in <code>config/app.php</code>.</li>
+<li>Your framework may store it in another place...</li>
+</ul>
+<p>The only way to make configuration available in a framework agnostic way is to make it available in the container.</p>
+<p>This means that <code>$container-&gt;get('DB_HOST')</code> should return the <code>DB_HOST</code> parameter stored in the configuration if it exists.</p>
+<p>Many frameworks out there treat configuration and services as 2 different beasts and do not make configuration available in the container.
+If you are in this case, you can still use universal module by providing the service providers with an adapter around your container.
+The adapter will check both the container and the configuration.</p>
+<p>Check the <a href="https://github.com/thecodingmachine/service-provider-bridge-bundle/blob/1.0/src/SymfonyContainerAdapter.php">Symfony adapter</a> or the <a href="https://github.com/thecodingmachine/laravel-universal-service-provider/blob/1.0/src/LaravelContainerAdapter.php">Laravel container adapter</a> if you need some examples.</p>
+<h2 id="automatic-discovery-of-service-providers">Automatic discovery of service providers</h2>
+<p>Frameworks MUST support service providers discovery using the Puli binding <strong>by default</strong>.</p>
+<p>This way, users of your framework will just have to require the universal module in Composer and automatically, your framework will detect and embed the service provider in the container.</p>
+<p>You should also offer an option to completely disable Puli.</p>
+<p>Of course, users can also manually disable Puli bindings to remove one particular service provider.</p>
+<h2 id="performance-optimizations">Performance optimizations</h2>
+<p>TODO: explain integration with container-interop/common-factories</p>
     </div>
 
 
